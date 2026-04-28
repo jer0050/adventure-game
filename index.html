@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailwind Adventure - Clean Version</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="m-0 p-0 overflow-hidden bg-black">
+    <div
+      id="game-world"
+      class="relative w-screen h-screen bg-no-repeat bg-center bg-[length:100%_100%]"
+      style="background-image: url(place1.png)"
+    >
+      <div
+        id="teleport-box"
+        class="absolute right-[21%] top-[15%] w-[6%] h-[10%] z-0"
+      ></div>
+
+      <img
+        id="character"
+        src="bottom.png"
+        class="absolute w-24 h-auto z-10 [image-rendering:pixelated] transition-transform duration-75 animate-bounce ease-in-out"
+        style="will-change: left, top"
+      />
+    </div>
+
+    <script type="text/javascript">
+      const character = document.getElementById("character");
+
+      // Starting position malapit sa building
+      let x = window.innerWidth * 0.15;
+      let y = window.innerHeight * 0.15;
+      let speed = 10;
+      let keys = {};
+      let isRedirecting = false;
+
+      window.addEventListener(
+        "keydown",
+        (e) => (keys[e.key.toLowerCase()] = true),
+      );
+      window.addEventListener(
+        "keyup",
+        (e) => (keys[e.key.toLowerCase()] = false),
+      );
+
+      function update() {
+        if (isRedirecting) return;
+
+        if (keys["d"] || keys["arrowright"]) {
+          x += speed;
+          character.src = "left.png";
+        } else if (keys["a"] || keys["arrowleft"]) {
+          x -= speed;
+          character.src = "right.png";
+        }
+
+        if (keys["s"] || keys["arrowdown"]) {
+          y += speed;
+          character.src = "bottom.png";
+        } else if (keys["w"] || keys["arrowup"]) {
+          y -= speed;
+          character.src = "top.png";
+        }
+
+        // Boundaries
+        x = Math.max(0, Math.min(x, window.innerWidth - 80));
+        y = Math.max(0, Math.min(y, window.innerHeight - 80));
+
+        character.style.left = `${x}px`;
+        character.style.top = `${y}px`;
+
+        // Percentages para sa detection
+        let px = (x / window.innerWidth) * 100;
+        let py = (y / window.innerHeight) * 100;
+
+        // TELEPORT LOGIC (Pinto ng Building)
+        if (px > 70 && px < 78 && py > 12 && py < 22) {
+          isRedirecting = true;
+          window.location.href = "kiko.html";
+          return;
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      requestAnimationFrame(update);
+    </script>
+  </body>
+</html>
