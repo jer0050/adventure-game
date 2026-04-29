@@ -42,7 +42,7 @@
       let x = 100, y = 100;
       let bx = -100, by = -100;
       let speed = 7;
-      let bugSpeed = 5;
+      let bugSpeed = 2; // BINAGALAN ANG BUG SPEED (Mula 5 naging 2)
       let isNight = false;
       let keys = {};
 
@@ -50,7 +50,6 @@
       window.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
 
       function loop() {
-        // Player Movement
         if (keys["d"] || keys["arrowright"]) { x += speed; char.src = "left.png"; }
         if (keys["a"] || keys["arrowleft"]) { x -= speed; char.src = "right.png"; }
         if (keys["w"] || keys["arrowup"]) { y -= speed; char.src = "top.png"; }
@@ -59,16 +58,13 @@
         char.style.left = x + "px";
         char.style.top = y + "px";
 
-        // BUG ATTACK LOGIC
         if (isNight) {
-            // Hahabulin ang player
             if (bx < x) bx += bugSpeed; else bx -= bugSpeed;
             if (by < y) by += bugSpeed; else by -= bugSpeed;
 
             bug.style.left = bx + "px";
             bug.style.top = by + "px";
 
-            // Collision Detection
             let dist = Math.sqrt(Math.pow(x - bx, 2) + Math.pow(y - by, 2));
             if (dist < 50) {
                 alert("NAHULI KA NG BUG! Game Over.");
@@ -80,37 +76,26 @@
       }
       loop();
 
-      /* --- INSERTED SYNTAX --- */
-
-      // 10 SECONDS CYCLE
       setInterval(function(){
         isNight = !isNight;
 
         if (isNight) {
-          // GABI NA: Aatake na ang bug
           bg.style.filter = "brightness(0.2) hue-rotate(200deg)";
           status.innerText = "STATUS: NIGHT (DANGER!)";
           status.classList.replace("text-green-400", "text-red-500");
-          
-          // I-position ang bug sa random na gilid
           bx = Math.random() > 0.5 ? -50 : window.innerWidth;
           by = Math.random() * window.innerHeight;
           bug.classList.remove("hidden");
-          
-          console.log("Night Start: Bug Spawned!");
         } else {
-          // UMAGA NA: Safe na ulit
           bg.style.filter = "brightness(1) hue-rotate(0deg)";
           status.innerText = "STATUS: DAY (SAFE)";
           status.classList.replace("text-red-500", "text-green-400");
           bug.classList.add("hidden");
-          
-          console.log("Day Start: Bug Disappeared.");
         }
-      }, 10000); // 10 seconds
+      }, 10000);
 
       setTimeout(function(){
-        console.log("Survival system ready. Get ready to run every 10 seconds!");
+        console.log("Bug speed set to slow mode.");
       }, 3000);
 
     </script>
