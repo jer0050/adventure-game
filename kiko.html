@@ -5,81 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body
-    class="bg-black h-screen flex flex-col items-center justify-center overflow-hidden"
-  >
-    <div
-      id="stage"
-      class="relative w-[1000px] h-[560px] border-4 border-[#222] rounded-lg shadow-2xl overflow-hidden"
-    >
-      <div
-        class="absolute inset-0 bg-cover bg-center z-0"
-        style="background-image: url(place.jpg)"
-      ></div>
+  <body class="bg-black h-screen flex flex-col items-center justify-center overflow-hidden">
+    <div id="stage" class="relative w-[1000px] h-[560px] border-4 border-[#222] rounded-lg shadow-2xl overflow-hidden">
+      <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url(place.jpg)"></div>
 
       <div class="absolute top-8 w-full flex justify-between px-10 z-30">
         <div class="w-[380px]">
-          <div
-            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
-          >
+          <div class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
             <span>JERU</span>
             <span id="p-hp-text">100%</span>
           </div>
           <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
-            <div
-              id="p-hp-bar"
-              class="bg-green-500 h-full w-full transition-all duration-300"
-            ></div>
+            <div id="p-hp-bar" class="bg-green-500 h-full w-full transition-all duration-300"></div>
           </div>
         </div>
 
         <div class="w-[380px]">
-          <div
-            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-right"
-          >
+          <div class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-right">
             <span id="e-hp-text">100%</span>
             <span>RENCY</span>
           </div>
           <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
-            <div
-              id="e-hp-bar"
-              class="bg-red-500 h-full w-full transition-all duration-300 ml-auto"
-            ></div>
+            <div id="e-hp-bar" class="bg-red-500 h-full w-full transition-all duration-300 ml-auto"></div>
           </div>
         </div>
       </div>
 
-      <div
-        id="player-view"
-        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
-      >
-        <div
-          id="player-sprite"
-          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
-        ></div>
+      <div id="player-view" class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10">
+        <div id="player-sprite" class="w-full h-full bg-no-repeat [image-rendering:pixelated]"></div>
       </div>
 
-      <div
-        id="enemy-view"
-        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
-      >
-        <div
-          id="enemy-sprite"
-          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
-        ></div>
+      <div id="enemy-view" class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10">
+        <div id="enemy-sprite" class="w-full h-full bg-no-repeat [image-rendering:pixelated]"></div>
       </div>
 
-      <div
-        id="game-over"
-        class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-40 text-center"
-      >
-        <h1
-          id="result-text"
-          class="text-9xl font-black italic uppercase tracking-tighter mb-4"
-        ></h1>
-        <p
-          class="text-white/50 font-mono text-sm tracking-[0.6em] uppercase animate-pulse"
-        >
+      <div id="game-over" class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-40 text-center">
+        <h1 id="result-text" class="text-9xl font-black italic uppercase tracking-tighter mb-4"></h1>
+        <p class="text-white/50 font-mono text-sm tracking-[0.6em] uppercase animate-pulse">
           Press ENTER to Rematch
         </p>
       </div>
@@ -93,30 +55,16 @@
       const phpBar = document.getElementById("p-hp-bar"),
         ehpBar = document.getElementById("e-hp-bar");
 
-      let pHP = 100,
-        eHP = 100;
-      let pX = 150,
-        pVel = 0,
-        pFacing = 1,
-        pFrame = 0,
-        pLast = 0;
-      let eX = 800,
-        eFacing = -1,
-        eFrame = 0,
-        eLast = 0;
-      let isPAtk = false,
-        pAtkType = null,
-        isEAtk = false;
-      let isPlayerDead = false,
-        isEnemyDead = false,
-        gameOver = false,
-        resultTriggered = false;
-      let activeKeys = {},
-        canAttackAgain = true;
+      let pHP = 100, eHP = 100;
+      let pX = 150, pVel = 0, pFacing = 1, pFrame = 0, pLast = 0;
+      let eX = 800, eFacing = -1, eFrame = 0, eLast = 0;
+      let isPAtk = false, pAtkType = null, isEAtk = false;
+      let isPlayerDead = false, isEnemyDead = false, gameOver = false, resultTriggered = false;
+      let activeKeys = {}, canAttackAgain = true;
 
       let gameLoopId;
 
-      // SET DAMAGE TO 1: Para matagal ang bakbakan
+      // FIXED DAMAGE: Set to 1 (Positive number so it subtracts health)
       const pStates = {
         walk: { url: "Walk.png", size: "800px 100px", frames: 8 },
         run: { url: "Run.png", size: "800px 100px", frames: 8 },
@@ -198,8 +146,10 @@
       }
 
       function updateHUD() {
-        pHP = Math.max(0, pHP);
-        eHP = Math.max(0, eHP);
+        // FIXED: Ensure health stays between 0 and 100
+        pHP = Math.max(0, Math.min(100, pHP));
+        eHP = Math.max(0, Math.min(100, eHP));
+        
         phpBar.style.width = pHP + "%";
         ehpBar.style.width = eHP + "%";
         document.getElementById("p-hp-text").innerText = Math.ceil(pHP) + "%";
@@ -300,17 +250,13 @@
       gameLoopId = requestAnimationFrame(gameLoop);
 
       /* --- INSERTED SYNTAX --- */
-
       setInterval(function(){
-        // Nilagay ko dito ang code block mo
-        console.log("3 seconds interval check");
+        console.log("3 seconds check: Match continues...");
       }, 3000);
 
       setTimeout(function(){
-        // Nilagay ko dito ang code block mo
-        console.log("3 seconds timeout check");
+        console.log("3 seconds check: Game fully initialized.");
       }, 3000);
-
     </script>
   </body>
 </html>
