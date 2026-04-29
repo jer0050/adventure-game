@@ -4,82 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .shake { animation: shake 0.1s infinite; }
+      @keyframes shake {
+        0% { transform: translate(1px, 1px); }
+        50% { transform: translate(-1px, -2px); }
+        100% { transform: translate(1px, 1px); }
+      }
+    </style>
   </head>
-  <body
-    class="bg-black h-screen flex flex-col items-center justify-center overflow-hidden"
-  >
-    <div
-      id="stage"
-      class="relative w-[1000px] h-[560px] border-4 border-[#222] rounded-lg shadow-2xl overflow-hidden"
-    >
-      <div
-        class="absolute inset-0 bg-cover bg-center z-0"
-        style="background-image: url(place.jpg)"
-      ></div>
+  <body class="bg-black h-screen flex flex-col items-center justify-center overflow-hidden">
+    
+    <div id="stage" class="relative w-[1000px] h-[560px] border-4 border-[#222] rounded-lg shadow-2xl overflow-hidden">
+      <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url(place.jpg)"></div>
 
       <div class="absolute top-8 w-full flex justify-between px-10 z-30">
         <div class="w-[380px]">
-          <div
-            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
-          >
+          <div class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
             <span>JERU</span>
             <span id="p-hp-text">100%</span>
           </div>
           <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
-            <div
-              id="p-hp-bar"
-              class="bg-green-500 h-full w-full transition-all duration-300"
-            ></div>
+            <div id="p-hp-bar" class="bg-green-500 h-full w-full transition-all duration-300"></div>
           </div>
         </div>
 
+        <div class="flex flex-col items-center">
+            <div id="round-timer" class="text-white font-black text-5xl italic drop-shadow-lg">99</div>
+        </div>
+
         <div class="w-[380px]">
-          <div
-            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-right"
-          >
+          <div class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-right">
             <span id="e-hp-text">100%</span>
             <span>RENCY</span>
           </div>
           <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
-            <div
-              id="e-hp-bar"
-              class="bg-red-500 h-full w-full transition-all duration-300 ml-auto"
-            ></div>
+            <div id="e-hp-bar" class="bg-red-500 h-full w-full transition-all duration-300 ml-auto"></div>
           </div>
         </div>
       </div>
 
-      <div
-        id="player-view"
-        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
-      >
-        <div
-          id="player-sprite"
-          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
-        ></div>
+      <div id="player-view" class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10">
+        <div id="player-sprite" class="w-full h-full bg-no-repeat [image-rendering:pixelated]"></div>
       </div>
 
-      <div
-        id="enemy-view"
-        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
-      >
-        <div
-          id="enemy-sprite"
-          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
-        ></div>
+      <div id="enemy-view" class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10">
+        <div id="enemy-sprite" class="w-full h-full bg-no-repeat [image-rendering:pixelated]"></div>
       </div>
 
-      <div
-        id="game-over"
-        class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-40 text-center"
-      >
-        <h1
-          id="result-text"
-          class="text-9xl font-black italic uppercase tracking-tighter mb-4"
-        ></h1>
-        <p
-          class="text-white/50 font-mono text-sm tracking-[0.6em] uppercase animate-pulse"
-        >
+      <div id="game-over" class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-40 text-center">
+        <h1 id="result-text" class="text-9xl font-black italic uppercase tracking-tighter mb-4"></h1>
+        <p class="text-white/50 font-mono text-sm tracking-[0.6em] uppercase animate-pulse">
           Press ENTER to Rematch
         </p>
       </div>
@@ -92,48 +67,55 @@
         eSprite = document.getElementById("enemy-sprite");
       const phpBar = document.getElementById("p-hp-bar"),
         ehpBar = document.getElementById("e-hp-bar");
+      const stage = document.getElementById("stage");
+      const timerDisplay = document.getElementById("round-timer");
 
-      let pHP = 100,
-        eHP = 100;
-      let pX = 150,
-        pVel = 0,
-        pFacing = 1,
-        pFrame = 0,
-        pLast = 0;
-      let eX = 800,
-        eFacing = -1,
-        eFrame = 0,
-        eLast = 0;
-      let isPAtk = false,
-        pAtkType = null,
-        isEAtk = false;
-      let isPlayerDead = false,
-        isEnemyDead = false,
-        gameOver = false,
-        resultTriggered = false;
-      let activeKeys = {},
-        canAttackAgain = true;
+      let pHP = 100, eHP = 100;
+      let pX = 150, pVel = 0, pFacing = 1, pFrame = 0, pLast = 0;
+      let eX = 800, eFacing = -1, eFrame = 0, eLast = 0;
+      let isPAtk = false, pAtkType = null, isEAtk = false;
+      let isPlayerDead = false, isEnemyDead = false, gameOver = false, resultTriggered = false;
+      let activeKeys = {}, canAttackAgain = true;
+      
+      // Timer Logic
+      let timeLeft = 99;
+      let gameTimer; // For setInterval
 
-      // Variable para i-store ang animation frame ID
       let gameLoopId;
 
       const pStates = {
         walk: { url: "Walk.png", size: "800px 100px", frames: 8 },
         run: { url: "Run.png", size: "800px 100px", frames: 8 },
-        jab: { url: "Attack_1.png", size: "400px 100px", frames: 4, dmg: -1 },
-        punch: { url: "Attack_2.png", size: "300px 100px", frames: 3, dmg: -1 },
-        kick: { url: "Attack_3.png", size: "400px 100px", frames: 4, dmg: -1 },
+        jab: { url: "Attack_1.png", size: "400px 100px", frames: 4, dmg: 5 },
+        punch: { url: "Attack_2.png", size: "300px 100px", frames: 3, dmg: 8 },
+        kick: { url: "Attack_3.png", size: "400px 100px", frames: 4, dmg: 10 },
         death: { url: "DIE.png", size: "300px 100px", frames: 3 },
       };
 
       const eStates = {
         walk: { url: "Walk2.png", size: "800px 100px", frames: 8 },
-        attack: { url: "Attacker.png", size: "400px 100px", frames: 4, dmg: -1 },
+        attack: { url: "Attacker.png", size: "400px 100px", frames: 4, dmg: 5 },
         death: { url: "Dead.png", size: "300px 100px", frames: 3 },
       };
 
+      // SETINTERVAL: Start the countdown
+      function startTimer() {
+          clearInterval(gameTimer); 
+          timeLeft = 99;
+          timerDisplay.innerText = timeLeft;
+          gameTimer = setInterval(() => {
+              if(!gameOver && timeLeft > 0) {
+                  timeLeft--;
+                  timerDisplay.innerText = timeLeft;
+                  if(timeLeft <= 0) {
+                      gameOver = true;
+                      showResult("TIME UP");
+                  }
+              }
+          }, 1000);
+      }
+
       function gameLoop(t) {
-        // Player Logic
         if (isPlayerDead) {
           animateDeath(pSprite, pStates.death, 200, t, "player");
         } else {
@@ -155,20 +137,12 @@
           if (isPAtk) {
             animate(pSprite, pStates[pAtkType], 80, t, "player", true);
           } else if (Math.abs(pVel) > 0.1) {
-            animate(
-              pSprite,
-              activeKeys["Shift"] ? pStates.run : pStates.walk,
-              90,
-              t,
-              "player",
-              false,
-            );
+            animate(pSprite, activeKeys["Shift"] ? pStates.run : pStates.walk, 90, t, "player", false);
           } else {
             setSprite(pSprite, pStates.walk, 0);
           }
         }
 
-        // Enemy Logic
         if (isEnemyDead) {
           animateDeath(eSprite, eStates.death, 200, t, "enemy");
         } else if (!gameOver) {
@@ -191,21 +165,32 @@
         eView.style.transform = `translateX(${eX}px) scale(4) scaleX(${eFacing})`;
 
         if (!gameOver) checkHit();
-
-        // I-save ang frame ID para ma-cancel mamaya
         gameLoopId = requestAnimationFrame(gameLoop);
       }
 
       function checkHit() {
         const dist = Math.abs(pX - eX);
+        
+        // Player Hits Enemy
         if (isPAtk && pFrame === 1 && dist < 160) {
           eHP -= pStates[pAtkType].dmg;
+          applyHitEffects(); // SETTIMEOUT: Screen shake
           updateHUD();
         }
+        // Enemy Hits Player
         if (isEAtk && eFrame === 2 && dist < 160) {
           pHP -= eStates.attack.dmg;
+          applyHitEffects(); // SETTIMEOUT: Screen shake
           updateHUD();
         }
+      }
+
+      // SETTIMEOUT: Briefly add a shake class and then remove it
+      function applyHitEffects() {
+          stage.classList.add("shake");
+          setTimeout(() => {
+              stage.classList.remove("shake");
+          }, 150); 
       }
 
       function updateHUD() {
@@ -232,41 +217,28 @@
       }
 
       function showResult(text) {
+        clearInterval(gameTimer); // Stop the clock
         const overlay = document.getElementById("game-over");
         const resText = document.getElementById("result-text");
         overlay.classList.remove("hidden");
         resText.innerText = text;
-        resText.className =
-          text === "K.O."
+        resText.className = text === "K.O." || text === "TIME UP"
             ? "text-red-600 text-9xl font-black italic uppercase drop-shadow-[0_0_40px_rgba(220,38,38,0.6)]"
             : "text-green-500 text-9xl font-black italic uppercase drop-shadow-[0_0_40px_rgba(34,197,94,0.6)]";
       }
 
       function resetGame() {
-        // PINAKA-IMPORTANTE: Itigil ang kasalukuyang loop
         cancelAnimationFrame(gameLoopId);
-
-        pHP = 100;
-        eHP = 100;
-        pX = 150;
-        eX = 800;
-        pVel = 0;
-        pFacing = 1;
-        eFacing = -1;
-        gameOver = false;
-        isPAtk = false;
-        isEAtk = false;
-        isEnemyDead = false;
-        isPlayerDead = false;
-        resultTriggered = false;
-        pAtkType = null;
-        canAttackAgain = true;
-        pFrame = 0;
-        eFrame = 0;
+        pHP = 100; eHP = 100;
+        pX = 150; eX = 800;
+        pVel = 0; pFacing = 1; eFacing = -1;
+        gameOver = false; isPAtk = false; isEAtk = false;
+        isEnemyDead = false; isPlayerDead = false;
+        resultTriggered = false; pAtkType = null;
+        canAttackAgain = true; pFrame = 0; eFrame = 0;
         document.getElementById("game-over").classList.add("hidden");
         updateHUD();
-
-        // Simulan ang bagong loop nang malinis
+        startTimer(); // Restart the clock
         gameLoopId = requestAnimationFrame(gameLoop);
       }
 
@@ -278,21 +250,12 @@
           if (f >= state.frames) {
             f = 0;
             if (isAtk) {
-              if (type === "player") {
-                isPAtk = false;
-                pAtkType = null;
-              } else {
-                isEAtk = false;
-              }
+              if (type === "player") { isPAtk = false; pAtkType = null; } 
+              else { isEAtk = false; }
             }
           }
-          if (type === "player") {
-            pFrame = f;
-            pLast = t;
-          } else {
-            eFrame = f;
-            eLast = t;
-          }
+          if (type === "player") { pFrame = f; pLast = t; } 
+          else { eFrame = f; eLast = t; }
         }
         setSprite(spr, state, f);
       }
@@ -303,13 +266,8 @@
         if (t - last > speed) {
           if (f < state.frames - 1) {
             f++;
-            if (type === "player") {
-              pFrame = f;
-              pLast = t;
-            } else {
-              eFrame = f;
-              eLast = t;
-            }
+            if (type === "player") { pFrame = f; pLast = t; } 
+            else { eFrame = f; eLast = t; }
           }
         }
         setSprite(spr, state, f);
@@ -322,10 +280,7 @@
       }
 
       window.addEventListener("keydown", (e) => {
-        if (resultTriggered && e.key === "Enter") {
-          resetGame();
-          return;
-        }
+        if (resultTriggered && e.key === "Enter") { resetGame(); return; }
         activeKeys[e.key] = true;
         const k = e.key.toLowerCase();
         if (canAttackAgain && !gameOver) {
@@ -346,7 +301,7 @@
           canAttackAgain = true;
       });
 
-      // Unang takbo ng loop
+      startTimer();
       gameLoopId = requestAnimationFrame(gameLoop);
     </script>
   </body>
