@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tailwind Adventure - Clean Version</title>
+    <title>Tailwind Adventure - Day & Night Cycle</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="m-0 p-0 overflow-hidden bg-black">
     <div
       id="game-world"
-      class="relative w-screen h-screen bg-no-repeat bg-center bg-[length:100%_100%]"
+      class="relative w-screen h-screen bg-no-repeat bg-center bg-[length:100%_100%] transition-all duration-[3000ms] ease-in-out"
       style="background-image: url(place1.png)"
     >
       <div
@@ -27,22 +27,19 @@
 
     <script type="text/javascript">
       const character = document.getElementById("character");
+      const gameWorld = document.getElementById("game-world");
 
-      // Starting position malapit sa building
       let x = window.innerWidth * 0.15;
       let y = window.innerHeight * 0.15;
       let speed = 10;
       let keys = {};
       let isRedirecting = false;
 
-      window.addEventListener(
-        "keydown",
-        (e) => (keys[e.key.toLowerCase()] = true),
-      );
-      window.addEventListener(
-        "keyup",
-        (e) => (keys[e.key.toLowerCase()] = false),
-      );
+      // Day and Night Variables
+      let isNight = false;
+
+      window.addEventListener("keydown", (e) => (keys[e.key.toLowerCase()] = true));
+      window.addEventListener("keyup", (e) => (keys[e.key.toLowerCase()] = false));
 
       function update() {
         if (isRedirecting) return;
@@ -63,18 +60,15 @@
           character.src = "top.png";
         }
 
-        // Boundaries
         x = Math.max(0, Math.min(x, window.innerWidth - 80));
         y = Math.max(0, Math.min(y, window.innerHeight - 80));
 
         character.style.left = `${x}px`;
         character.style.top = `${y}px`;
 
-        // Percentages para sa detection
         let px = (x / window.innerWidth) * 100;
         let py = (y / window.innerHeight) * 100;
 
-        // TELEPORT LOGIC (Pinto ng Building)
         if (px > 70 && px < 78 && py > 12 && py < 22) {
           isRedirecting = true;
           window.location.href = "kiko.html";
@@ -85,6 +79,28 @@
       }
 
       requestAnimationFrame(update);
+
+      /* --- DAY AND NIGHT LOGIC --- */
+
+      // SETINTERVAL: Kada 3 segundo, magpapalit ang mode (Gabi o Umaga)
+      setInterval(function() {
+        if (!isNight) {
+          // MAGIGING GABI: Binabawasan ang brightness at ginagawang bluish ang kulay
+          gameWorld.style.filter = "brightness(0.4) hue-rotate(200deg) saturate(1.2)";
+          console.log("Night time...");
+        } else {
+          // MAGIGING UMAGA: Babalik sa normal ang kulay
+          gameWorld.style.filter = "brightness(1) hue-rotate(0deg) saturate(1)";
+          console.log("Day time...");
+        }
+        isNight = !isNight; // Pagpapalitin ang status
+      }, 3000);
+
+      // SETTIMEOUT: Initial message pagka-load
+      setTimeout(function() {
+        console.log("Environment system initialized.");
+      }, 3000);
+
     </script>
   </body>
 </html>
