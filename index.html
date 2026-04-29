@@ -3,12 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bug Survival - 10s Night</title>
+    <title>Bug Survival - No Alert</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      .night-filter { filter: brightness(0.3) blue-tint; transition: all 2s; }
       #bug { 
-        width: 50px; height: 50px; 
+        width: 40px; height: 40px; 
         background: url('https://cdn-icons-png.flaticon.com/512/535/535213.png') no-repeat center;
         background-size: contain;
         filter: drop-shadow(0 0 10px red);
@@ -20,16 +19,18 @@
     <div id="bg-layer" class="fixed inset-0 bg-no-repeat bg-center bg-[length:100%_100%] transition-all duration-[2000ms]" 
          style="background-image: url('place1.png'); z-index: 0;"></div>
 
-    <div class="relative w-screen h-screen" style="z-index: 10;">
-      
-      <img id="character" src="bottom.png" class="absolute w-20 h-auto z-20 transition-transform duration-75" 
-           style="left: 100px; top: 100px;" />
+    <div id="death-screen" class="fixed inset-0 bg-black/80 z-[100] hidden flex flex-col items-center justify-center">
+        <h1 class="text-red-600 text-6xl font-black mb-4">GAME OVER</h1>
+        <button onclick="location.reload()" class="px-8 py-3 bg-red-600 text-white font-bold rounded-full hover:bg-red-500 transition-colors">RESTART</button>
+    </div>
 
+    <div class="relative w-screen h-screen" style="z-index: 10;">
+      <img id="character" src="bottom.png" class="absolute w-20 h-auto z-20" style="left: 100px; top: 100px;" />
       <div id="bug" class="absolute hidden z-30 animate-pulse"></div>
 
-      <div class="absolute top-5 left-5 bg-black/70 p-4 text-white border-2 border-red-600 rounded">
+      <div class="absolute top-5 left-5 bg-black/70 p-4 text-white border-2 border-green-600 rounded">
           <h2 id="time-status" class="text-xl font-bold text-green-400">STATUS: DAY (SAFE)</h2>
-          <p id="countdown">Survival Mode: OFF</p>
+          <p>Avoid the bug at night!</p>
       </div>
     </div>
 
@@ -38,18 +39,19 @@
       const bg = document.getElementById("bg-layer");
       const bug = document.getElementById("bug");
       const status = document.getElementById("time-status");
+      const deathScreen = document.getElementById("death-screen");
 
-      let x = 100, y = 100;
-      let bx = -100, by = -100;
-      let speed = 7;
-      let bugSpeed = 2; // BINAGALAN ANG BUG SPEED (Mula 5 naging 2)
-      let isNight = false;
+      let x = 100, y = 100, bx = -100, by = -100;
+      let speed = 9, bugSpeed = 1.2;
+      let isNight = false, isDead = false;
       let keys = {};
 
       window.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
       window.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
 
       function loop() {
+        if (isDead) return;
+
         if (keys["d"] || keys["arrowright"]) { x += speed; char.src = "left.png"; }
         if (keys["a"] || keys["arrowleft"]) { x -= speed; char.src = "right.png"; }
         if (keys["w"] || keys["arrowup"]) { y -= speed; char.src = "top.png"; }
@@ -66,19 +68,18 @@
             bug.style.top = by + "px";
 
             let dist = Math.sqrt(Math.pow(x - bx, 2) + Math.pow(y - by, 2));
-            if (dist < 50) {
-                alert("NAHULI KA NG BUG! Game Over.");
-                location.reload();
+            if (dist < 30) { 
+                isDead = true;
+                deathScreen.classList.remove("hidden");
             }
         }
-
         requestAnimationFrame(loop);
       }
       loop();
 
       setInterval(function(){
+        if(isDead) return;
         isNight = !isNight;
-
         if (isNight) {
           bg.style.filter = "brightness(0.2) hue-rotate(200deg)";
           status.innerText = "STATUS: NIGHT (DANGER!)";
@@ -95,9 +96,8 @@
       }, 10000);
 
       setTimeout(function(){
-        console.log("Bug speed set to slow mode.");
+          console.log("Survival active - Alert disabled, UI enabled.");
       }, 3000);
-
     </script>
   </body>
 </html>
