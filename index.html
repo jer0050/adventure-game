@@ -3,39 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tailwind Adventure - Day & Night Cycle</title>
+    <title>Tailwind Adventure - Day & Night Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="m-0 p-0 overflow-hidden bg-black">
+    
     <div
-      id="game-world"
-      class="relative w-screen h-screen bg-no-repeat bg-center bg-[length:100%_100%] transition-all duration-[3000ms] ease-in-out"
+      id="bg-layer"
+      class="absolute inset-0 bg-no-repeat bg-center bg-[length:100%_100%] transition-all duration-[3000ms] ease-in-out z-0"
       style="background-image: url(place1.png)"
-    >
+    ></div>
+
+    <div id="game-container" class="relative w-screen h-screen z-10">
       <div
         id="teleport-box"
-        class="absolute right-[21%] top-[15%] w-[6%] h-[10%] z-0"
+        class="absolute right-[21%] top-[15%] w-[6%] h-[10%]"
       ></div>
 
       <img
         id="character"
         src="bottom.png"
-        class="absolute w-24 h-auto z-10 [image-rendering:pixelated] transition-transform duration-75 animate-bounce ease-in-out"
+        class="absolute w-24 h-auto [image-rendering:pixelated] transition-transform duration-75 animate-bounce ease-in-out"
         style="will-change: left, top"
       />
     </div>
 
     <script type="text/javascript">
       const character = document.getElementById("character");
-      const gameWorld = document.getElementById("game-world");
+      const bgLayer = document.getElementById("bg-layer");
 
       let x = window.innerWidth * 0.15;
       let y = window.innerHeight * 0.15;
       let speed = 10;
       let keys = {};
       let isRedirecting = false;
-
-      // Day and Night Variables
       let isNight = false;
 
       window.addEventListener("keydown", (e) => (keys[e.key.toLowerCase()] = true));
@@ -80,25 +81,21 @@
 
       requestAnimationFrame(update);
 
-      /* --- DAY AND NIGHT LOGIC --- */
+      /* --- DAY AND NIGHT LOGIC (Background Only) --- */
 
-      // SETINTERVAL: Kada 3 segundo, magpapalit ang mode (Gabi o Umaga)
       setInterval(function() {
         if (!isNight) {
-          // MAGIGING GABI: Binabawasan ang brightness at ginagawang bluish ang kulay
-          gameWorld.style.filter = "brightness(0.4) hue-rotate(200deg) saturate(1.2)";
-          console.log("Night time...");
+          // Background lang ang didilim
+          bgLayer.style.filter = "brightness(0.3) hue-rotate(200deg)";
         } else {
-          // MAGIGING UMAGA: Babalik sa normal ang kulay
-          gameWorld.style.filter = "brightness(1) hue-rotate(0deg) saturate(1)";
-          console.log("Day time...");
+          // Balik sa normal ang background
+          bgLayer.style.filter = "brightness(1) hue-rotate(0deg)";
         }
-        isNight = !isNight; // Pagpapalitin ang status
+        isNight = !isNight;
       }, 3000);
 
-      // SETTIMEOUT: Initial message pagka-load
       setTimeout(function() {
-        console.log("Environment system initialized.");
+        console.log("Visual layers separated.");
       }, 3000);
 
     </script>
