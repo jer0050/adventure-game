@@ -3,123 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Survival - Bug Attack</title>
+    <title>Bug Survival - 10s Night</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Red pulse effect kapag gabi at may bug */
-      .night-danger { box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.2); }
-    </script>
+      .night-filter { filter: brightness(0.3) blue-tint; transition: all 2s; }
+      #bug { 
+        width: 50px; height: 50px; 
+        background: url('https://cdn-icons-png.flaticon.com/512/535/535213.png') no-repeat center;
+        background-size: contain;
+        filter: drop-shadow(0 0 10px red);
+      }
+    </style>
   </head>
-  <body class="m-0 p-0 overflow-hidden bg-black">
+  <body class="m-0 p-0 overflow-hidden bg-black font-mono">
     
-    <div id="bg-layer" class="fixed inset-0 bg-no-repeat bg-center bg-[length:100%_100%] transition-all duration-[2000ms] ease-in-out" style="background-image: url('place1.png'); z-index: 0;"></div>
+    <div id="bg-layer" class="fixed inset-0 bg-no-repeat bg-center bg-[length:100%_100%] transition-all duration-[2000ms]" 
+         style="background-image: url('place1.png'); z-index: 0;"></div>
 
-    <div id="game-container" class="relative w-screen h-screen transition-all duration-500" style="z-index: 10;">
+    <div class="relative w-screen h-screen" style="z-index: 10;">
       
-      <img id="character" src="bottom.png" class="absolute w-20 h-auto [image-rendering:pixelated] transition-transform duration-75 animate-bounce" style="left: 50%; top: 50%;" />
+      <img id="character" src="bottom.png" class="absolute w-20 h-auto z-20 transition-transform duration-75" 
+           style="left: 100px; top: 100px;" />
 
-      <div id="bug" class="absolute w-12 h-12 bg-red-600 rounded-full hidden flex items-center justify-center border-4 border-black shadow-lg" style="left: -100px; top: -100px;">
-          <span class="text-white font-bold text-xs">BUG</span>
-      </div>
+      <div id="bug" class="absolute hidden z-30 animate-pulse"></div>
 
-      <div class="absolute top-5 left-5 bg-black/50 p-4 text-white font-mono rounded border border-white/20">
-          <p id="status">TIME: DAY (SAFE)</p>
-          <p id="survival-msg" class="text-yellow-400 hidden">SURVIVE THE BUG! 10s</p>
+      <div class="absolute top-5 left-5 bg-black/70 p-4 text-white border-2 border-red-600 rounded">
+          <h2 id="time-status" class="text-xl font-bold text-green-400">STATUS: DAY (SAFE)</h2>
+          <p id="countdown">Survival Mode: OFF</p>
       </div>
     </div>
 
     <script type="text/javascript">
-      const character = document.getElementById("character");
-      const bgLayer = document.getElementById("bg-layer");
+      const char = document.getElementById("character");
+      const bg = document.getElementById("bg-layer");
       const bug = document.getElementById("bug");
-      const statusText = document.getElementById("status");
-      const survivalMsg = document.getElementById("survival-msg");
-      const gameContainer = document.getElementById("game-container");
+      const status = document.getElementById("time-status");
 
-      let x = window.innerWidth / 2, y = window.innerHeight / 2;
-      let bugX = -100, bugY = -100;
-      let speed = 8;
-      let bugSpeed = 4;
-      let keys = {};
+      let x = 100, y = 100;
+      let bx = -100, by = -100;
+      let speed = 7;
+      let bugSpeed = 5;
       let isNight = false;
-      let gameOver = false;
+      let keys = {};
 
       window.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
       window.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
 
-      function update() {
-        if (gameOver) return;
-
+      function loop() {
         // Player Movement
-        if (keys["d"] || keys["arrowright"]) { x += speed; character.src = "left.png"; }
-        if (keys["a"] || keys["arrowleft"]) { x -= speed; character.src = "right.png"; }
-        if (keys["s"] || keys["arrowdown"]) { y += speed; character.src = "bottom.png"; }
-        if (keys["w"] || keys["arrowup"]) { y -= speed; character.src = "top.png"; }
+        if (keys["d"] || keys["arrowright"]) { x += speed; char.src = "left.png"; }
+        if (keys["a"] || keys["arrowleft"]) { x -= speed; char.src = "right.png"; }
+        if (keys["w"] || keys["arrowup"]) { y -= speed; char.src = "top.png"; }
+        if (keys["s"] || keys["arrowdown"]) { y += speed; char.src = "bottom.png"; }
 
-        // Screen Boundaries
-        x = Math.max(0, Math.min(x, window.innerWidth - 80));
-        y = Math.max(0, Math.min(y, window.innerHeight - 80));
+        char.style.left = x + "px";
+        char.style.top = y + "px";
 
-        character.style.left = x + "px";
-        character.style.top = y + "px";
-
-        // Bug AI (Susunod sa character kapag gabi)
+        // BUG ATTACK LOGIC
         if (isNight) {
-            let dx = x - bugX;
-            let dy = y - bugY;
-            let angle = Math.atan2(dy, dx);
-            bugX += Math.cos(angle) * bugSpeed;
-            bugY += Math.sin(angle) * bugSpeed;
-            
-            bug.style.left = bugX + "px";
-            bug.style.top = bugY + "px";
+            // Hahabulin ang player
+            if (bx < x) bx += bugSpeed; else bx -= bugSpeed;
+            if (by < y) by += bugSpeed; else by -= bugSpeed;
 
-            // Collision Detection (Check kung naabutan ka ng bug)
-            let dist = Math.hypot(x - bugX, y - bugY);
-            if (dist < 40) {
-                gameOver = true;
-                alert("GAME OVER! NAKAIN KA NG BUG.");
-                window.location.reload();
+            bug.style.left = bx + "px";
+            bug.style.top = by + "px";
+
+            // Collision Detection
+            let dist = Math.sqrt(Math.pow(x - bx, 2) + Math.pow(y - by, 2));
+            if (dist < 50) {
+                alert("NAHULI KA NG BUG! Game Over.");
+                location.reload();
             }
         }
 
-        requestAnimationFrame(update);
+        requestAnimationFrame(loop);
       }
+      loop();
 
-      requestAnimationFrame(update);
+      /* --- INSERTED SYNTAX --- */
 
-      /* --- SURVIVAL LOGIC (10 SECONDS) --- */
-
+      // 10 SECONDS CYCLE
       setInterval(function(){
-        if (!isNight) {
-          // MAGIGING GABI (10 SECONDS START)
-          isNight = true;
-          bgLayer.style.filter = "brightness(0.2) hue-rotate(220deg)";
-          gameContainer.classList.add("night-danger");
-          statusText.innerText = "TIME: NIGHT (DANGER)";
-          survivalMsg.classList.remove("hidden");
+        isNight = !isNight;
 
-          // I-spawn ang Bug sa malayo
-          bugX = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
-          bugY = Math.random() * window.innerHeight;
+        if (isNight) {
+          // GABI NA: Aatake na ang bug
+          bg.style.filter = "brightness(0.2) hue-rotate(200deg)";
+          status.innerText = "STATUS: NIGHT (DANGER!)";
+          status.classList.replace("text-green-400", "text-red-500");
+          
+          // I-position ang bug sa random na gilid
+          bx = Math.random() > 0.5 ? -50 : window.innerWidth;
+          by = Math.random() * window.innerHeight;
           bug.classList.remove("hidden");
           
-          console.log("Night started: Survival for 10s");
+          console.log("Night Start: Bug Spawned!");
         } else {
-          // MAGIGING UMAGA (LIGTAS NA)
-          isNight = false;
-          bgLayer.style.filter = "brightness(1) hue-rotate(0deg)";
-          gameContainer.classList.remove("night-danger");
-          statusText.innerText = "TIME: DAY (SAFE)";
-          survivalMsg.classList.add("hidden");
-          bug.classList.add("hidden"); // Mawawala ang bug
+          // UMAGA NA: Safe na ulit
+          bg.style.filter = "brightness(1) hue-rotate(0deg)";
+          status.innerText = "STATUS: DAY (SAFE)";
+          status.classList.replace("text-red-500", "text-green-400");
+          bug.classList.add("hidden");
           
-          console.log("Day started: Bug retreated");
+          console.log("Day Start: Bug Disappeared.");
         }
-      }, 10000); // 10 SECONDS CYCLE
+      }, 10000); // 10 seconds
 
       setTimeout(function(){
-        console.log("Survival System Active: Watch out for the red bug at night!");
+        console.log("Survival system ready. Get ready to run every 10 seconds!");
       }, 3000);
 
     </script>
