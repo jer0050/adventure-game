@@ -1,356 +1,316 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body
-    class="bg-black h-screen flex flex-col items-center justify-center overflow-hidden"
-  >
-    <div
-      id="stage"
-      class="relative w-[1000px] h-[560px] border-4 border-[#222] rounded-lg shadow-2xl overflow-hidden"
-    >
-      <div
-        class="absolute inset-0 bg-cover bg-center z-0"
-        style="background-image: url(place.jpg)"
-      ></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-black h-screen flex flex-col items-center justify-center overflow-hidden"
+  >
+    <div
+      id="stage"
+      class="relative w-[1000px] h-[560px] border-4 border-[#222] rounded-lg shadow-2xl overflow-hidden"
+    >
+      <div
+        class="absolute inset-0 bg-cover bg-center z-0"
+        style="background-image: url(place.jpg)"
+      ></div>
 
-      <div class="absolute top-8 w-full flex justify-between px-10 z-30">
-        <div class="w-[380px]">
-          <div
-            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
-          >
-            <span>JERU</span>
-            <span id="p-hp-text">100%</span>
-          </div>
-          <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
-            <div
-              id="p-hp-bar"
-              class="bg-green-500 h-full w-full transition-all duration-300"
-            ></div>
-          </div>
-        </div>
+      <div class="absolute top-8 w-full flex justify-between px-10 z-30">
+        <div class="w-[380px]">
+          <div
+            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
+          >
+            <span>JERU</span>
+            <span id="p-hp-text">100%</span>
+          </div>
+          <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
+            <div
+              id="p-hp-bar"
+              class="bg-green-500 h-full w-full transition-all duration-300"
+            ></div>
+          </div>
+        </div>
 
-        <div class="w-[380px]">
-          <div
-            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-right"
-          >
-            <span id="e-hp-text">100%</span>
-            <span>RENCY</span>
-          </div>
-          <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
-            <div
-              id="e-hp-bar"
-              class="bg-red-500 h-full w-full transition-all duration-300 ml-auto"
-            ></div>
-          </div>
-        </div>
-      </div>
+        <div class="w-[380px]">
+          <div
+            class="flex justify-between mb-2 text-white font-mono text-sm uppercase font-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-right"
+          >
+            <span id="e-hp-text">100%</span>
+            <span>RENCY</span>
+          </div>
+          <div class="w-full bg-black/60 h-6 border-2 border-white shadow-lg">
+            <div
+              id="e-hp-bar"
+              class="bg-red-500 h-full w-full transition-all duration-300 ml-auto"
+            ></div>
+          </div>
+        </div>
+      </div>
 
-      <div
-        id="player-view"
-        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
-      >
-        <div
-          id="player-sprite"
-          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
-        ></div>
-      </div>
+      <div
+        id="player-view"
+        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
+      >
+        <div
+          id="player-sprite"
+          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
+        ></div>
+      </div>
 
-      <div
-        id="enemy-view"
-        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
-      >
-        <div
-          id="enemy-sprite"
-          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
-        ></div>
-      </div>
+      <div
+        id="enemy-view"
+        class="absolute bottom-[45px] left-0 w-[100px] h-[100px] origin-bottom z-10"
+      >
+        <div
+          id="enemy-sprite"
+          class="w-full h-full bg-no-repeat [image-rendering:pixelated]"
+        ></div>
+      </div>
 
-      <div
-        id="game-over"
-        class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-40 text-center"
-      >
-        <h1
-          id="result-text"
-          class="text-9xl font-black italic uppercase tracking-tighter mb-4"
-        ></h1>
-        <p
-          class="text-white/50 font-mono text-sm tracking-[0.6em] uppercase animate-pulse"
-        >
-          Press ENTER to Rematch
-        </p>
-      </div>
-    </div>
+      <div
+        id="game-over"
+        class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-40 text-center"
+      >
+        <h1
+          id="result-text"
+          class="text-9xl font-black italic uppercase tracking-tighter mb-4"
+        ></h1>
+        <p
+          class="text-white/50 font-mono text-sm tracking-[0.6em] uppercase animate-pulse"
+        >
+          Press ENTER to Rematch
+        </p>
+      </div>
+    </div>
 
-    <script>
-      const pView = document.getElementById("player-view"),
-        pSprite = document.getElementById("player-sprite");
-      const eView = document.getElementById("enemy-view"),
-        eSprite = document.getElementById("enemy-sprite");
-      const phpBar = document.getElementById("p-hp-bar"),
-        ehpBar = document.getElementById("e-hp-bar");
+    <script>
+      const pView = document.getElementById("player-view"),
+        pSprite = document.getElementById("player-sprite");
+      const eView = document.getElementById("enemy-view"),
+        eSprite = document.getElementById("enemy-sprite");
+      const phpBar = document.getElementById("p-hp-bar"),
+        ehpBar = document.getElementById("e-hp-bar");
 
-      let pHP = 100,
-        eHP = 100;
-      let pX = 150,
-        pVel = 0,
-        pFacing = 1,
-        pFrame = 0,
-        pLast = 0;
-      let eX = 800,
-        eFacing = -1,
-        eFrame = 0,
-        eLast = 0;
-      let isPAtk = false,
-        pAtkType = null,
-        isEAtk = false;
-      let isPlayerDead = false,
-        isEnemyDead = false,
-        gameOver = false,
-        resultTriggered = false;
-      let activeKeys = {},
-        canAttackAgain = true;
+      let pHP = 100,
+        eHP = 100;
+      let pX = 150,
+        pVel = 0,
+        pFacing = 1,
+        pFrame = 0,
+        pLast = 0;
+      let eX = 800,
+        eFacing = -1,
+        eFrame = 0,
+        eLast = 0;
+      let isPAtk = false,
+        pAtkType = null,
+        isEAtk = false;
+      let isPlayerDead = false,
+        isEnemyDead = false,
+        gameOver = false,
+        resultTriggered = false;
+      let activeKeys = {},
+        canAttackAgain = true;
 
-      // Variable para i-store ang animation frame ID
-      let gameLoopId;
+      let gameLoopId;
 
-      const pStates = {
-        walk: { url: "Walk.png", size: "800px 100px", frames: 8 },
-        run: { url: "Run.png", size: "800px 100px", frames: 8 },
-        jab: { url: "Attack_1.png", size: "400px 100px", frames: 4, dmg: -1 },
-        punch: { url: "Attack_2.png", size: "300px 100px", frames: 3, dmg: -1 },
-        kick: { url: "Attack_3.png", size: "400px 100px", frames: 4, dmg: -1 },
-        death: { url: "DIE.png", size: "300px 100px", frames: 3 },
-      };
+      // SET DAMAGE TO 1: Para matagal ang bakbakan
+      const pStates = {
+        walk: { url: "Walk.png", size: "800px 100px", frames: 8 },
+        run: { url: "Run.png", size: "800px 100px", frames: 8 },
+        jab: { url: "Attack_1.png", size: "400px 100px", frames: 4, dmg: 1 },
+        punch: { url: "Attack_2.png", size: "300px 100px", frames: 3, dmg: 1 },
+        kick: { url: "Attack_3.png", size: "400px 100px", frames: 4, dmg: 1 },
+        death: { url: "DIE.png", size: "300px 100px", frames: 3 },
+      };
 
-      const eStates = {
-        walk: { url: "Walk2.png", size: "800px 100px", frames: 8 },
-        attack: { url: "Attacker.png", size: "400px 100px", frames: 4, dmg: -1 },
-        death: { url: "Dead.png", size: "300px 100px", frames: 3 },
-      };
+      const eStates = {
+        walk: { url: "Walk2.png", size: "800px 100px", frames: 8 },
+        attack: { url: "Attacker.png", size: "400px 100px", frames: 4, dmg: 1 },
+        death: { url: "Dead.png", size: "300px 100px", frames: 3 },
+      };
 
-      function gameLoop(t) {
-        // Player Logic
-        if (isPlayerDead) {
-          animateDeath(pSprite, pStates.death, 200, t, "player");
-        } else {
-          let dir = 0;
-          if (!gameOver) {
-            if (activeKeys["ArrowRight"]) dir = 1;
-            if (activeKeys["ArrowLeft"]) dir = -1;
-          }
-          const speed = activeKeys["Shift"] ? 8 : 4;
-          if (dir !== 0) {
-            pVel += dir * 0.6;
-            pFacing = dir;
-          } else {
-            pVel *= 0.8;
-          }
-          if (Math.abs(pVel) > speed) pVel = speed * Math.sign(pVel);
-          pX = Math.max(50, Math.min(pX + pVel, 900));
+      function gameLoop(t) {
+        if (isPlayerDead) {
+          animateDeath(pSprite, pStates.death, 200, t, "player");
+        } else {
+          let dir = 0;
+          if (!gameOver) {
+            if (activeKeys["ArrowRight"]) dir = 1;
+            if (activeKeys["ArrowLeft"]) dir = -1;
+          }
+          const speed = activeKeys["Shift"] ? 8 : 4;
+          if (dir !== 0) {
+            pVel += dir * 0.6;
+            pFacing = dir;
+          } else {
+            pVel *= 0.8;
+          }
+          if (Math.abs(pVel) > speed) pVel = speed * Math.sign(pVel);
+          pX = Math.max(50, Math.min(pX + pVel, 900));
 
-          if (isPAtk) {
-            animate(pSprite, pStates[pAtkType], 80, t, "player", true);
-          } else if (Math.abs(pVel) > 0.1) {
-            animate(
-              pSprite,
-              activeKeys["Shift"] ? pStates.run : pStates.walk,
-              90,
-              t,
-              "player",
-              false,
-            );
-          } else {
-            setSprite(pSprite, pStates.walk, 0);
-          }
-        }
+          if (isPAtk) {
+            animate(pSprite, pStates[pAtkType], 80, t, "player", true);
+          } else if (Math.abs(pVel) > 0.1) {
+            animate(pSprite, activeKeys["Shift"] ? pStates.run : pStates.walk, 90, t, "player", false);
+          } else {
+            setSprite(pSprite, pStates.walk, 0);
+          }
+        }
 
-        // Enemy Logic
-        if (isEnemyDead) {
-          animateDeath(eSprite, eStates.death, 200, t, "enemy");
-        } else if (!gameOver) {
-          const dist = pX - eX;
-          eFacing = dist > 0 ? 1 : -1;
-          if (!isEAtk) {
-            if (Math.abs(dist) > 110) {
-              eX += eFacing * 2.5;
-              animate(eSprite, eStates.walk, 100, t, "enemy", false);
-            } else {
-              isEAtk = true;
-              eFrame = 0;
-            }
-          } else {
-            animate(eSprite, eStates.attack, 120, t, "enemy", true);
-          }
-        }
+        if (isEnemyDead) {
+          animateDeath(eSprite, eStates.death, 200, t, "enemy");
+        } else if (!gameOver) {
+          const dist = pX - eX;
+          eFacing = dist > 0 ? 1 : -1;
+          if (!isEAtk) {
+            if (Math.abs(dist) > 110) {
+              eX += eFacing * 2.5;
+              animate(eSprite, eStates.walk, 100, t, "enemy", false);
+            } else {
+              isEAtk = true;
+              eFrame = 0;
+            }
+          } else {
+            animate(eSprite, eStates.attack, 120, t, "enemy", true);
+          }
+        }
 
-        pView.style.transform = `translateX(${pX}px) scale(4) scaleX(${pFacing})`;
-        eView.style.transform = `translateX(${eX}px) scale(4) scaleX(${eFacing})`;
+        pView.style.transform = `translateX(${pX}px) scale(4) scaleX(${pFacing})`;
+        eView.style.transform = `translateX(${eX}px) scale(4) scaleX(${eFacing})`;
 
-        if (!gameOver) checkHit();
+        if (!gameOver) checkHit();
+        gameLoopId = requestAnimationFrame(gameLoop);
+      }
 
-        // I-save ang frame ID para ma-cancel mamaya
-        gameLoopId = requestAnimationFrame(gameLoop);
-      }
+      function checkHit() {
+        const dist = Math.abs(pX - eX);
+        if (isPAtk && pFrame === 1 && dist < 160) {
+          eHP -= pStates[pAtkType].dmg;
+          updateHUD();
+        }
+        if (isEAtk && eFrame === 2 && dist < 160) {
+          pHP -= eStates.attack.dmg;
+          updateHUD();
+        }
+      }
 
-      function checkHit() {
-        const dist = Math.abs(pX - eX);
-        if (isPAtk && pFrame === 1 && dist < 160) {
-          eHP -= pStates[pAtkType].dmg;
-          updateHUD();
-        }
-        if (isEAtk && eFrame === 2 && dist < 160) {
-          pHP -= eStates.attack.dmg;
-          updateHUD();
-        }
-      }
+      function updateHUD() {
+        pHP = Math.max(0, pHP);
+        eHP = Math.max(0, eHP);
+        phpBar.style.width = pHP + "%";
+        ehpBar.style.width = eHP + "%";
+        document.getElementById("p-hp-text").innerText = Math.ceil(pHP) + "%";
+        document.getElementById("e-hp-text").innerText = Math.ceil(eHP) + "%";
 
-      function updateHUD() {
-        pHP = Math.max(0, pHP);
-        eHP = Math.max(0, eHP);
-        phpBar.style.width = pHP + "%";
-        ehpBar.style.width = eHP + "%";
-        document.getElementById("p-hp-text").innerText = Math.ceil(pHP) + "%";
-        document.getElementById("e-hp-text").innerText = Math.ceil(eHP) + "%";
+        if (pHP <= 0 && !isPlayerDead) {
+          isPlayerDead = true;
+          pFrame = 0;
+          gameOver = true;
+          resultTriggered = true;
+          setTimeout(() => showResult("K.O."), 1200);
+        } else if (eHP <= 0 && !isEnemyDead) {
+          isEnemyDead = true;
+          eFrame = 0;
+          gameOver = true;
+          resultTriggered = true;
+          setTimeout(() => showResult("VICTORY"), 1200);
+        }
+      }
 
-        if (pHP <= 0 && !isPlayerDead) {
-          isPlayerDead = true;
-          pFrame = 0;
-          gameOver = true;
-          resultTriggered = true;
-          setTimeout(() => showResult("K.O."), 1200);
-        } else if (eHP <= 0 && !isEnemyDead) {
-          isEnemyDead = true;
-          eFrame = 0;
-          gameOver = true;
-          resultTriggered = true;
-          setTimeout(() => showResult("VICTORY"), 1200);
-        }
-      }
+      function showResult(text) {
+        const overlay = document.getElementById("game-over");
+        const resText = document.getElementById("result-text");
+        overlay.classList.remove("hidden");
+        resText.innerText = text;
+        resText.className = text === "K.O." ? "text-red-600 text-9xl font-black italic uppercase drop-shadow-[0_0_40px_rgba(220,38,38,0.6)]" : "text-green-500 text-9xl font-black italic uppercase drop-shadow-[0_0_40px_rgba(34,197,94,0.6)]";
+      }
 
-      function showResult(text) {
-        const overlay = document.getElementById("game-over");
-        const resText = document.getElementById("result-text");
-        overlay.classList.remove("hidden");
-        resText.innerText = text;
-        resText.className =
-          text === "K.O."
-            ? "text-red-600 text-9xl font-black italic uppercase drop-shadow-[0_0_40px_rgba(220,38,38,0.6)]"
-            : "text-green-500 text-9xl font-black italic uppercase drop-shadow-[0_0_40px_rgba(34,197,94,0.6)]";
-      }
+      function resetGame() {
+        cancelAnimationFrame(gameLoopId);
+        pHP = 100; eHP = 100; pX = 150; eX = 800; pVel = 0; pFacing = 1; eFacing = -1;
+        gameOver = false; isPAtk = false; isEAtk = false; isEnemyDead = false; isPlayerDead = false;
+        resultTriggered = false; pAtkType = null; canAttackAgain = true; pFrame = 0; eFrame = 0;
+        document.getElementById("game-over").classList.add("hidden");
+        updateHUD();
+        gameLoopId = requestAnimationFrame(gameLoop);
+      }
 
-      function resetGame() {
-        // PINAKA-IMPORTANTE: Itigil ang kasalukuyang loop
-        cancelAnimationFrame(gameLoopId);
+      function animate(spr, state, speed, t, type, isAtk) {
+        const last = type === "player" ? pLast : eLast;
+        let f = type === "player" ? pFrame : eFrame;
+        if (t - last > speed) {
+          f++;
+          if (f >= state.frames) {
+            f = 0;
+            if (isAtk) {
+              if (type === "player") { isPAtk = false; pAtkType = null; } 
+              else { isEAtk = false; }
+            }
+          }
+          if (type === "player") { pFrame = f; pLast = t; } 
+          else { eFrame = f; eLast = t; }
+        }
+        setSprite(spr, state, f);
+      }
 
-        pHP = 100;
-        eHP = 100;
-        pX = 150;
-        eX = 800;
-        pVel = 0;
-        pFacing = 1;
-        eFacing = -1;
-        gameOver = false;
-        isPAtk = false;
-        isEAtk = false;
-        isEnemyDead = false;
-        isPlayerDead = false;
-        resultTriggered = false;
-        pAtkType = null;
-        canAttackAgain = true;
-        pFrame = 0;
-        eFrame = 0;
-        document.getElementById("game-over").classList.add("hidden");
-        updateHUD();
+      function animateDeath(spr, state, speed, t, type) {
+        const last = type === "player" ? pLast : eLast;
+        let f = type === "player" ? pFrame : eFrame;
+        if (t - last > speed) {
+          if (f < state.frames - 1) {
+            f++;
+            if (type === "player") { pFrame = f; pLast = t; } 
+            else { eFrame = f; eLast = t; }
+          }
+        }
+        setSprite(spr, state, f);
+      }
 
-        // Simulan ang bagong loop nang malinis
-        gameLoopId = requestAnimationFrame(gameLoop);
-      }
+      function setSprite(spr, state, f) {
+        spr.style.backgroundImage = `url('${state.url}')`;
+        spr.style.backgroundSize = state.size;
+        spr.style.backgroundPosition = `-${f * 100}px 0px`;
+      }
 
-      function animate(spr, state, speed, t, type, isAtk) {
-        const last = type === "player" ? pLast : eLast;
-        let f = type === "player" ? pFrame : eFrame;
-        if (t - last > speed) {
-          f++;
-          if (f >= state.frames) {
-            f = 0;
-            if (isAtk) {
-              if (type === "player") {
-                isPAtk = false;
-                pAtkType = null;
-              } else {
-                isEAtk = false;
-              }
-            }
-          }
-          if (type === "player") {
-            pFrame = f;
-            pLast = t;
-          } else {
-            eFrame = f;
-            eLast = t;
-          }
-        }
-        setSprite(spr, state, f);
-      }
+      window.addEventListener("keydown", (e) => {
+        if (resultTriggered && e.key === "Enter") { resetGame(); return; }
+        activeKeys[e.key] = true;
+        const k = e.key.toLowerCase();
+        if (canAttackAgain && !gameOver) {
+          if (k === "a" || k === "d" || e.code === "Space") {
+            isPAtk = true;
+            canAttackAgain = false;
+            pFrame = 0;
+            if (k === "a") pAtkType = "jab";
+            if (k === "d") pAtkType = "punch";
+            if (e.code === "Space") pAtkType = "kick";
+          }
+        }
+      });
 
-      function animateDeath(spr, state, speed, t, type) {
-        const last = type === "player" ? pLast : eLast;
-        let f = type === "player" ? pFrame : eFrame;
-        if (t - last > speed) {
-          if (f < state.frames - 1) {
-            f++;
-            if (type === "player") {
-              pFrame = f;
-              pLast = t;
-            } else {
-              eFrame = f;
-              eLast = t;
-            }
-          }
-        }
-        setSprite(spr, state, f);
-      }
+      window.addEventListener("keyup", (e) => {
+        activeKeys[e.key] = false;
+        if (["a", "d", " "].includes(e.key.toLowerCase()) || e.code === "Space")
+          canAttackAgain = true;
+      });
 
-      function setSprite(spr, state, f) {
-        spr.style.backgroundImage = `url('${state.url}')`;
-        spr.style.backgroundSize = state.size;
-        spr.style.backgroundPosition = `-${f * 100}px 0px`;
-      }
+      gameLoopId = requestAnimationFrame(gameLoop);
 
-      window.addEventListener("keydown", (e) => {
-        if (resultTriggered && e.key === "Enter") {
-          resetGame();
-          return;
-        }
-        activeKeys[e.key] = true;
-        const k = e.key.toLowerCase();
-        if (canAttackAgain && !gameOver) {
-          if (k === "a" || k === "d" || e.code === "Space") {
-            isPAtk = true;
-            canAttackAgain = false;
-            pFrame = 0;
-            if (k === "a") pAtkType = "jab";
-            if (k === "d") pAtkType = "punch";
-            if (e.code === "Space") pAtkType = "kick";
-          }
-        }
-      });
+      /* --- INSERTED SYNTAX --- */
 
-      window.addEventListener("keyup", (e) => {
-        activeKeys[e.key] = false;
-        if (["a", "d", " "].includes(e.key.toLowerCase()) || e.code === "Space")
-          canAttackAgain = true;
-      });
+      setInterval(function(){
+        // Nilagay ko dito ang code block mo
+        console.log("3 seconds interval check");
+      }, 3000);
 
-      // Unang takbo ng loop
-      gameLoopId = requestAnimationFrame(gameLoop);
-    </script>
-  </body>
+      setTimeout(function(){
+        // Nilagay ko dito ang code block mo
+        console.log("3 seconds timeout check");
+      }, 3000);
+
+    </script>
+  </body>
 </html>
-
-
-put in this
